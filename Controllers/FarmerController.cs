@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NCIPortalDataAccess;
+using NCIPortalDataAccess.DBContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,18 @@ namespace NCIPortal.Controllers
     [ApiController]
     public class FarmerController : ControllerBase
     {
+        private NCIDBContext nciDbContext;
+        FarmerService fService = null;
+        public FarmerController(NCIDBContext context)
+        {
+            nciDbContext = context;
+            fService = new FarmerService(nciDbContext);
+        }
         // GET: api/<FarmerController>
         [HttpGet("GetFarmersList")]
-        public async Task<IActionResult> GetFarmersList()
-        {
-            FarmerService fService = new FarmerService();
-            List<FarmerModel> fList= await fService.getFarmersList();
+        public IActionResult GetFarmersList()
+        { 
+            List<FarmerModel> fList=  fService.getFarmerList();
             return Ok(fList);
         }
 
